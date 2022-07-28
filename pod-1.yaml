@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pod-1
+spec:
+  template:
+    metadata:
+      name: pod-1
+      labels:
+        app: pod-1
+    spec:
+      containers:
+        - name: nginx-container
+          image: nginx:stable
+          volumeMounts:
+            - mountPath: /pasta-de-arquivos
+              name: volume-pod-1
+          ports:
+           - containerPort: 80
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            periodSeconds: 10
+            failureThreshold: 3
+            initialDelaySeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            periodSeconds: 10
+            failureThreshold: 3
+            initialDelaySeconds: 3
+      volumes:
+        - name: volume-pod-1
+          hostPath:
+            path: /C/desenvolvimento/CursoAlura/KubernetesPratica
+            type: Directory
+  selector:
+    matchLabels:
+      app: pod-1
